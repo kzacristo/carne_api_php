@@ -61,7 +61,7 @@ class Application
 
       if ($valor_entrada > 0) {
         $somatoria_acumulada += $valor_entrada;
-        $parcelas[] = [
+        $entrada[] = [
           'data_vencimento' => $data_primeiro_vencimento->format('Y-m-d'),
           'valor' => $valor_entrada,
           'numero' => 1,
@@ -69,6 +69,7 @@ class Application
           'somatoria' => round($somatoria_acumulada, 2)
         ];
         $data_primeiro_vencimento = $getPeriodicidade->getPeriodicidade($periodicidade ,$data_primeiro_vencimento);
+        $response['entrada'] = $entrada;
       }
 
       for ($i = 0; $i < $qtd_parcelas; $i++) {
@@ -92,7 +93,7 @@ class Application
       ];
 
       // Resposta com o ID do carnê
-      $response = [
+      $response["parcelas"] = [
         'id' => $carne_id,
         'total' => $valor_total,
         'valor_entrada' => $valor_entrada,
