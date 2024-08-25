@@ -1,9 +1,48 @@
 services:
-  php-apache:
+  app:
     build:
-      context: .
+      args:
+        user: sammy
+        uid: 1000
+      context: ./
       dockerfile: Dockerfile
-    ports:
-      - "8080:80"
+    image: carne
+    deploy:
+      resources:
+        limits:
+          memory: 4098M
+        reservations:
+          memory: 2098M
+    container_name: carne-app
+    restart: 'no'
+    entrypoint: [ "bash", "-c", "composer install && php-fpm"]      
+    working_dir: /var/www
     volumes:
-      - ./src:/var/www/html
+      - ./:/var/www
+    expose:
+      - 9000:9000
+    networks:
+      - carne
+
+  nginx:
+    image: nginx:1-alpine-slim
+    deploy:
+      resources:
+        limits:
+          memory: 4098M
+        reservations:
+          memory: 2098M
+    container_name: carne-nginx
+    restart: unless-stopped
+    ports:
+      - 8081:80
+    volumes:
+      - ./:/var/www
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/fastcgi-php.conf:/etc/nginx/snippets/fastcgi-php.conf
+    networks:
+      - carne
+
+networks:
+  carne:
+    driver: bridge
