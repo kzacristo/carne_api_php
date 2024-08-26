@@ -44,6 +44,8 @@ docker-compose up --build -d
 
 http://localhost:8081\carne</p>
 
-se preferir pode usar o arquivo postman disponivel na projeto
+se preferir pode usar o arquivo postman disponivel na projeto em 
+
+Carne.postman_collection.json
 
 ###
