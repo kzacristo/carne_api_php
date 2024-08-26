@@ -94,35 +94,13 @@ class Application
 
       // Resposta com o ID do carnê
       $response["parcelas"] = [
-        'id' => $carne_id,
+        'idCarne' => $carne_id,
         'total' => $valor_total,
         'valor_entrada' => $valor_entrada,
         'parcelas' => $parcelas
       ];
 
       echo json_encode($response);
-      return;
-    });
-
-    $router->create("GET", "/recuperarParcela", function () {
-      if (!isset($_GET['id'])) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Parâmetro id é obrigatório']);
-        return;
-      }
-
-      http_response_code(200);
-
-      $id = $_GET['id'];
-
-      if (!isset($carneStore[$id])) {
-        http_response_code(404);
-        echo json_encode(['error' => 'Carnê não encontrado']);
-        return;
-      }
-
-      // Resposta com as parcelas do carnê solicitado
-      echo json_encode(['parcelas' => $carneStore[$id]['parcelas']]);
       return;
     });
 

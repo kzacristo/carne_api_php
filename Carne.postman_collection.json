@@ -1,0 +1,39 @@
+{
+	"info": {
+		"_postman_id": "e2274ef8-96c7-46f7-a739-8ac29b415dd7",
+		"name": "Carne",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14386926",
+		"_collection_link": "https://lively-meadow-930368.postman.co/workspace/New-Team-Workspace~7a2d5a92-3d7d-4df7-8163-158da6d04465/collection/14386926-e2274ef8-96c7-46f7-a739-8ac29b415dd7?action=share&source=collection_link&creator=14386926"
+	},
+	"item": [
+		{
+			"name": "carne_php",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"valor_total\": 100.00,\n    \"qtd_parcelas\": 12,\n    \"data_primeiro_vencimento\": \"2024-08-01\",\n    \"periodicidade\": \"mensal\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/carne",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"carne"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
