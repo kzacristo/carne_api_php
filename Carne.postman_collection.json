@@ -34,6 +34,37 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "carne_recuperarParcela",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\" : \"66ccb35c86641\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/recuperarParcela",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"recuperarParcela"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

@@ -7,14 +7,24 @@ use Exception;
 
 class Application
 {
+  private $storagePath = __DIR__ . '/carne_storage/'; // Pasta onde os carnês serão salvos
+
+  public function __construct()
+  {
+    // Cria a pasta de armazenamento se não existir
+    if (!is_dir($this->storagePath)) {
+      mkdir($this->storagePath, 0777, true);
+    }
+  }
+
   public function start()
   {
     $router = new Router();
 
+    // Criação do carnê
     $router->create("POST", "/carne", function () {
-      http_response_code(200);
       $data = json_decode(file_get_contents('php://input'), true);
-    
+
       // Validação básica
       $requiredFields = ['valor_total', 'qtd_parcelas', 'data_primeiro_vencimento', 'periodicidade'];
       foreach ($requiredFields as $field) {
@@ -68,7 +78,7 @@ class Application
           'entrada' => true,
           'somatoria' => round($somatoria_acumulada, 2)
         ];
-        $data_primeiro_vencimento = $getPeriodicidade->getPeriodicidade($periodicidade ,$data_primeiro_vencimento);
+        $data_primeiro_vencimento = $getPeriodicidade->getPeriodicidade($periodicidade, $data_primeiro_vencimento);
         $response['entrada'] = $entrada;
       }
 
@@ -81,16 +91,17 @@ class Application
           'entrada' => false,
           'somatoria' => round($somatoria_acumulada, 2)
         ];
-        $data_primeiro_vencimento = $getPeriodicidade->getPeriodicidade($periodicidade ,$data_primeiro_vencimento);
+        $data_primeiro_vencimento = $getPeriodicidade->getPeriodicidade($periodicidade, $data_primeiro_vencimento);
       }
 
-      // Armazenamento do carnê com um ID gerado
+      // Armazenamento do carnê em arquivo
       $carne_id = uniqid();
-      $carneStore[$carne_id] = [
+      $carneData = [
         'total' => $valor_total,
         'valor_entrada' => $valor_entrada,
         'parcelas' => $parcelas
       ];
+      file_put_contents($this->storagePath . $carne_id . '.json', json_encode($carneData));
 
       // Resposta com o ID do carnê
       $response["parcelas"] = [
@@ -101,6 +112,31 @@ class Application
       ];
 
       echo json_encode($response);
+      return;
+    });
+
+    // Recuperação das parcelas
+    $router->create("GET", "/recuperarParcela", function () {
+      $data = json_decode(file_get_contents('php://input'), true);
+
+      if (!$data['id']) {
+        http_response_code(404);
+        echo json_encode(['error' => 'Parâmetro id é obrigatório']);
+        return;
+      }
+
+      $filePath = $this->storagePath . $data['id'] . '.json';
+
+      if (!file_exists($filePath)) {
+        http_response_code(404);
+        echo json_encode(['error' => 'Carnê não encontrado']);
+        return;
+      }
+
+      $carneData = json_decode(file_get_contents($filePath), true);
+
+      http_response_code(200);
+      echo json_encode(['parcelas' => $carneData['parcelas']]);
       return;
     });
 
